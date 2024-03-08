@@ -5,8 +5,8 @@ namespace StockMarket.Database.Model;
 public class UserEntity
 {
 
-    public int Id { get; set; }
-    
+    public Guid Id { get; set; }
+
     public string XAPIKey { get; set; }
     
     public string Name { get; set; }

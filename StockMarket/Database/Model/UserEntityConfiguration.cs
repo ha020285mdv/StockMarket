@@ -13,9 +13,9 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
         builder
             .HasKey(x => x.Id);
         builder
-            .Property(e => e.Id)
+            .Property(x => x.Id)
             .ValueGeneratedOnAdd()
-            .UseIdentityColumn();
+            .HasDefaultValueSql("NEWID()");
 
         builder
             .Property(x => x.XAPIKey)

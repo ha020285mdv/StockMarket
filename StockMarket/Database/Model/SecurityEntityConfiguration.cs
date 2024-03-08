@@ -10,16 +10,10 @@ public class SecurityEntityConfiguration : IEntityTypeConfiguration<SecurityEnti
     public void Configure(EntityTypeBuilder<SecurityEntity> builder)
     {
         builder
-            .HasKey(x => x.Id);
+            .HasKey(x => x.Ticker);
         builder
-            .Property(e => e.Id)
-            .ValueGeneratedOnAdd()
-            .UseIdentityColumn();
-
-        builder
-            .Property(x => x.Symbol)
+            .Property(x => x.Ticker)
             .IsRequired();
-
         builder
             .Property(x => x.Name)
             .IsRequired();
@@ -27,7 +21,7 @@ public class SecurityEntityConfiguration : IEntityTypeConfiguration<SecurityEnti
         builder
             .HasMany<UserPortfolioEntity>(e => e.Portfolio)
             .WithOne(e => e.Security)
-            .HasForeignKey(e => e.IdSecurity)
+            .HasForeignKey(e => e.SecurityTicker)
             .OnDelete(DeleteBehavior.Restrict)
             .IsRequired();
 

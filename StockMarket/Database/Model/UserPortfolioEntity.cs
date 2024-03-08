@@ -5,7 +5,7 @@ namespace StockMarket.Database.Model;
 public class UserPortfolioEntity
 {
 
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     public int Number { get; set; }
 
@@ -13,7 +13,7 @@ public class UserPortfolioEntity
 
     public UserEntity User { get; set; }
 
-    public int IdSecurity { get; set; }
+    public string SecurityTicker { get; set; }
 
     public SecurityEntity Security { get; set; }
 }

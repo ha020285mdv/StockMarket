@@ -5,9 +5,7 @@ namespace StockMarket.Database.Model;
 public class SecurityEntity
 {
 
-    public int Id { get; set; }
-
-    public string Symbol { get; set; }
+    public string Ticker { get; set; }
 
     public string Name { get; set; }
 

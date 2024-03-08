@@ -12,9 +12,8 @@ public class UserPortfolioEntityConfiguration : IEntityTypeConfiguration<UserPor
         builder
             .HasKey(x => x.Id);
         builder
-            .Property(e => e.Id)
-            .ValueGeneratedOnAdd()
-            .UseIdentityColumn();
+            .Property(x => x.Id)
+            .HasDefaultValueSql("NEWID()");
 
         builder
             .Property(x => x.Number)
@@ -29,10 +28,7 @@ public class UserPortfolioEntityConfiguration : IEntityTypeConfiguration<UserPor
         builder
             .HasOne(e => e.Security)
             .WithMany(e => e.Portfolio)
-            .HasForeignKey(e => e.IdSecurity)
+            .HasForeignKey(e => e.SecurityTicker)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }
-
-
-
