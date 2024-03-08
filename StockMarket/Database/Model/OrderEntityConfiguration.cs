@@ -5,16 +5,28 @@ using System.Reflection.Metadata;
 
 namespace StockMarket.Database.Model;
 
-public class OrderEntityConfiguration : IEntityTypeConfiguration<OrderEntity>
+public class OrderHistoryEntityConfiguration : IEntityTypeConfiguration<OrderHistoryEntity>
 {
-    public void Configure(EntityTypeBuilder<OrderEntity> builder)
+    public void Configure(EntityTypeBuilder<OrderHistoryEntity> builder)
     {
         builder
             .HasKey(x => x.Id);
         builder
-            .Property(e => e.Id)
+            .Property(x => x.Id)
             .ValueGeneratedOnAdd()
-            .UseIdentityColumn();
+            .HasDefaultValueSql("NEWID()");
+
+        builder
+            .HasOne(e => e.Security)
+            .WithMany(e => e.OrderBooks)
+            .HasForeignKey(e => e.Ticker)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder
+            .HasOne(e => e.User)
+            .WithMany(e => e.Orders)
+            .HasForeignKey(e => e.IdUser)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder
             .Property(x => x.Action)
@@ -22,12 +34,17 @@ public class OrderEntityConfiguration : IEntityTypeConfiguration<OrderEntity>
             .IsRequired();
 
         builder
-            .Property(x => x.Status)
-            .HasConversion<int>()
-            .IsRequired();
+            .Property(x => x.CreatedDate)
+            .ValueGeneratedOnAdd()
+            .HasDefaultValueSql("GETUTCDATE()");  // TODO: ask if it is ok?
 
         builder
-            .Property(x => x.Volume)
+            .Property(x => x.ModifiedDate)
+            .ValueGeneratedOnUpdate()
+            .HasDefaultValueSql("GETUTCDATE()");  // TODO: ask if it is ok?
+
+        builder
+            .Property(x => x.VolumeRequested)
             .IsRequired();
 
         builder
@@ -36,28 +53,20 @@ public class OrderEntityConfiguration : IEntityTypeConfiguration<OrderEntity>
             .HasColumnType("decimal(18, 2)");
 
         builder
-            .Property(x => x.Expires)
+            .Property(x => x.ExpirationDate)
             .IsRequired();
 
         builder
-            .HasOne(e => e.Security)
-            .WithMany(e => e.OrderBooks)
-            .HasForeignKey(e => e.IdSecurity)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        builder
-            .HasMany<OrderFillEntity>(e => e.BuyOrderFills)
-            .WithOne(e => e.BuyOrder)
-            .HasForeignKey(e => e.IdBuyOrder)
-            .OnDelete(DeleteBehavior.Restrict)
+            .Property(x => x.Status)
+            .HasConversion<int>()
             .IsRequired();
 
-        builder
-            .HasMany<OrderFillEntity>(e => e.SellOrderFills)
-            .WithOne(e => e.SellOrder)
-            .HasForeignKey(e => e.IdSellOrder)
-            .OnDelete(DeleteBehavior.Restrict)
-            .IsRequired();
+
+        //// make relation one-to-one to OrderHistory
+       // builder
+       //     .HasOne(e => e.ActiveOrder)
+       //     .WithOne(e => e.User)
+       //     .HasForeignKey<UserProfile>(up => up.UserProfileId);
 
     }
 }

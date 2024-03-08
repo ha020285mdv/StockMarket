@@ -11,6 +11,6 @@ public class SecurityEntity
 
     public ICollection<UserPortfolioEntity> Portfolio { get; set; } = new List<UserPortfolioEntity>();
 
-    public ICollection<OrderEntity> OrderBooks { get; set; } = new List<OrderEntity>();
+    public ICollection<OrderHistoryEntity> OrderBooks { get; set; } = new List<OrderHistoryEntity>();
 
 }

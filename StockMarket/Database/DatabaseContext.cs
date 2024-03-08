@@ -11,7 +11,7 @@ public class DatabaseContext : DbContext
 
     public DbSet<SecurityEntity> Securities { get; set; }
 
-    public DbSet<OrderEntity> Orders { get; set; }
+    public DbSet<OrderHistoryEntity> OrdersHistory { get; set; }
 
     public DbSet<OrderFillEntity> OrderFills { get; set; }
 
@@ -22,7 +22,7 @@ public class DatabaseContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserEntityConfiguration).Assembly);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserPortfolioEntityConfiguration).Assembly);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(SecurityEntityConfiguration).Assembly);
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(OrderEntityConfiguration).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(OrderHistoryEntityConfiguration).Assembly);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(OrderFillEntityConfiguration).Assembly);
     }
 }

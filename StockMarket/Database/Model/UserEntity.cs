@@ -17,4 +17,6 @@ public class UserEntity
 
     public ICollection<UserPortfolioEntity> Portfolio { get; set; } = new List<UserPortfolioEntity>();
 
+    public ICollection<OrderHistoryEntity> Orders { get; set; } = new List<OrderHistoryEntity>();
+
 }

@@ -3,26 +3,32 @@
 namespace StockMarket.Database.Model;
 
 
-public class OrderEntity
+public class OrderHistoryEntity
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
-    public OrderAction Action { get; set; }
-
-    public OrderStatus Status { get; set; }
-
-    public int Volume { get; set; }
-
-    public decimal Price { get; set; }
-
-    public DateTime Expires { get; set; }
-
-    public int IdSecurity { get; set; }
+    public string Ticker { get; set; }
 
     public SecurityEntity Security { get; set; }
 
-    public List<OrderFillEntity> BuyOrderFills { get; set; } = new List<OrderFillEntity>();
+    public int IdUser { get; set; }
 
-    public List<OrderFillEntity> SellOrderFills { get; set; } = new List<OrderFillEntity>();
+    public UserEntity User { get; set; }
+
+    public OrderAction Action { get; set; }
+
+    public DateTime CreatedDate { get; set; }
+
+    public DateTime ModifiedDate { get; set; }
+
+    public int VolumeRequested { get; set; }
+
+    public decimal Price { get; set; }
+
+    public DateTime ExpirationDate { get; set; }
+
+    public OrderStatus Status { get; set; }
+
+    public ActiveOrder ActiveOrder { get; set; };
 
 }

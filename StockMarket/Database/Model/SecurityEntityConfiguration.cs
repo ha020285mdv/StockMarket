@@ -26,9 +26,9 @@ public class SecurityEntityConfiguration : IEntityTypeConfiguration<SecurityEnti
             .IsRequired();
 
         builder
-            .HasMany<OrderEntity>(e => e.OrderBooks)
+            .HasMany<OrderHistoryEntity>(e => e.OrderBooks)
             .WithOne(e => e.Security)
-            .HasForeignKey(e => e.IdSecurity)
+            .HasForeignKey(e => e.Ticker)
             .OnDelete(DeleteBehavior.Restrict)
             .IsRequired();
     }

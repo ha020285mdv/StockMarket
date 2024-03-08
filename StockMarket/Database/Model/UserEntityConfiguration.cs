@@ -49,5 +49,13 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
             .HasForeignKey(e => e.IdUser)
             .OnDelete(DeleteBehavior.Restrict)
             .IsRequired();
+
+
+        builder
+            .HasMany<OrderHistoryEntity>(e => e.Orders)
+            .WithOne(e => e.User)
+            .HasForeignKey(e => e.IdUser)
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired();
     }
 }
