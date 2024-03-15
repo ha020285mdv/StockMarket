@@ -13,6 +13,8 @@ public class DatabaseContext : DbContext
 
     public DbSet<OrderHistoryEntity> OrdersHistory { get; set; }
 
+    public DbSet<ActiveOrdersEntity> ActiveOrders { get; set; }
+
     public DbSet<OrderFillEntity> OrderFills { get; set; }
 
     public DatabaseContext(DbContextOptions options) : base(options){}
@@ -20,9 +22,5 @@ public class DatabaseContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserEntityConfiguration).Assembly);
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserPortfolioEntityConfiguration).Assembly);
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(SecurityEntityConfiguration).Assembly);
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(OrderHistoryEntityConfiguration).Assembly);
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(OrderFillEntityConfiguration).Assembly);
     }
 }

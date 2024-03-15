@@ -11,9 +11,7 @@ public class SecurityEntityConfiguration : IEntityTypeConfiguration<SecurityEnti
     {
         builder
             .HasKey(x => x.Ticker);
-        builder
-            .Property(x => x.Ticker)
-            .IsRequired();
+
         builder
             .Property(x => x.Name)
             .IsRequired();
@@ -21,12 +19,19 @@ public class SecurityEntityConfiguration : IEntityTypeConfiguration<SecurityEnti
         builder
             .HasMany<UserPortfolioEntity>(e => e.Portfolio)
             .WithOne(e => e.Security)
-            .HasForeignKey(e => e.SecurityTicker)
+            .HasForeignKey(e => e.Ticker)
             .OnDelete(DeleteBehavior.Restrict)
             .IsRequired();
 
         builder
-            .HasMany<OrderHistoryEntity>(e => e.OrderBooks)
+            .HasMany<OrderHistoryEntity>(e => e.OrderHistory)
+            .WithOne(e => e.Security)
+            .HasForeignKey(e => e.Ticker)
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired();
+
+        builder
+            .HasMany<ActiveOrdersEntity>(e => e.ActiveOrders)
             .WithOne(e => e.Security)
             .HasForeignKey(e => e.Ticker)
             .OnDelete(DeleteBehavior.Restrict)

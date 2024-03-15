@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
+﻿using StockMarket.Constants;
 using StockMarket.Database;
 using StockMarket.Database.Model;
+using StockMarket.Services;
 using System.Net;
 using System.Security.Claims;
 
@@ -10,7 +10,7 @@ namespace StockMarket.Middlewares
     public class ApiKeyMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IUserService _userService;
 
         public ApiKeyMiddleware(
             RequestDelegate next,
@@ -18,7 +18,7 @@ namespace StockMarket.Middlewares
         )
         {
             _next = next;
-            _serviceProvider = serviceProvider;
+            _userService = serviceProvider.GetRequiredService<IUserService>();
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -38,12 +38,10 @@ namespace StockMarket.Middlewares
                 return;
             }
 
-            // get access to the database
-            using var scope = _serviceProvider.CreateScope();
-            DatabaseContext database = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+            // get the user from the database
+            UserEntity? User = await _userService.GetUserAsync(userApiKey);
 
-            // check if the user exists
-            UserEntity? User = await database.Users.FirstOrDefaultAsync(u => u.XAPIKey == userApiKey);
+            // check if user exists, if not - stop the request
             if (User == null)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
@@ -51,10 +49,10 @@ namespace StockMarket.Middlewares
             }
 
             // check if email from GET request belongs to the user, if not - stop the request
-            // TODO: how to make it prettier?
             if (context.Request.Path.StartsWithSegments("/api/v1/users") && context.Request.Method == "GET")          
             {
-                string? requestEmail = context.Request.Path.Value.Split('/').LastOrDefault();
+                // TODO: how to get the email from the request query without Split()?
+                string? requestEmail = context.Request.Path.Value.Split('/').LastOrDefault(); 
                 if (requestEmail != User.Email)
                 {
                     context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
@@ -65,17 +63,15 @@ namespace StockMarket.Middlewares
             ClaimsPrincipal principal = new ClaimsPrincipal();
 
             List<Claim> claims = new List<Claim>();
-            claims.Add(new Claim("UserId", User.Id.ToString()));
-            claims.Add(new Claim("Name", User.Name));
-            claims.Add(new Claim("Email", User.Email));
+            claims.Add(new Claim(CustomClaimType.UserId, User.Id.ToString()));
+            claims.Add(new Claim(CustomClaimType.Name, User.Name));
+            claims.Add(new Claim(CustomClaimType.Email, User.Email));
 
-            ClaimsIdentity identity = new ClaimsIdentity(claims);
+            ClaimsIdentity identity = new ClaimsIdentity(claims, "Custom");
 
             principal.AddIdentity(identity);
 
             context.User = principal;
-
-            Console.WriteLine("User authenticated: " + User.Name);
 
             await _next(context);
         }

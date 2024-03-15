@@ -10,10 +10,7 @@ public class UserPortfolioEntityConfiguration : IEntityTypeConfiguration<UserPor
     public void Configure(EntityTypeBuilder<UserPortfolioEntity> builder)
     {
         builder
-            .HasKey(x => x.Id);
-        builder
-            .Property(x => x.Id)
-            .HasDefaultValueSql("NEWID()");
+            .HasKey(x => new { x.UserId, x.Ticker });
 
         builder
             .Property(x => x.Number)
@@ -22,13 +19,13 @@ public class UserPortfolioEntityConfiguration : IEntityTypeConfiguration<UserPor
         builder
             .HasOne(e => e.User)
             .WithMany(e => e.Portfolio)
-            .HasForeignKey(e => e.IdUser)
+            .HasForeignKey(e => e.UserId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder
             .HasOne(e => e.Security)
             .WithMany(e => e.Portfolio)
-            .HasForeignKey(e => e.SecurityTicker)
+            .HasForeignKey(e => e.Ticker)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }

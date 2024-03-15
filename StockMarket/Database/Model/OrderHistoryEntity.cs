@@ -11,7 +11,7 @@ public class OrderHistoryEntity
 
     public SecurityEntity Security { get; set; }
 
-    public int IdUser { get; set; }
+    public Guid UserId { get; set; }
 
     public UserEntity User { get; set; }
 
@@ -29,6 +29,6 @@ public class OrderHistoryEntity
 
     public OrderStatus Status { get; set; }
 
-    public ActiveOrder ActiveOrder { get; set; };
+    public ActiveOrdersEntity? ActiveOrder { get; set; }
 
 }

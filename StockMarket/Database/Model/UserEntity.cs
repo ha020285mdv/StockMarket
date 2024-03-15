@@ -19,4 +19,6 @@ public class UserEntity
 
     public ICollection<OrderHistoryEntity> Orders { get; set; } = new List<OrderHistoryEntity>();
 
+    public ICollection<ActiveOrdersEntity> ActiveOrders { get; set; } = new List<ActiveOrdersEntity>();
+
 }

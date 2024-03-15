@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using StockMarket.Application.Commands;
 using StockMarket.Application.Exceptions;
 using StockMarket.Application.Queries;
+using StockMarket.Constants;
 using StockMarket.Database.Model;
 
 namespace StockMarket.Controllers;
@@ -27,8 +28,8 @@ public class UserController : ControllerBase
     public async Task<IActionResult> GetUser(string email)
     {
         
-        string? userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-                
+
+
         try
         {
             var user = await _mediator.Send(new UserQuery() { Email = email.ToLower() });

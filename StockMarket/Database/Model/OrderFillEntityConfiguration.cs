@@ -12,10 +12,21 @@ public class OrderFillEntityConfiguration : IEntityTypeConfiguration<OrderFillEn
         builder
             .HasKey(x => x.Id);
         builder
-            .Property(e => e.Id)
-            .ValueGeneratedOnAdd()
-            .UseIdentityColumn();
+            .Property(x => x.Id)
+            .HasDefaultValueSql("NEWID()");
 
+        builder
+            .HasOne(e => e.BuyOrder)
+            .WithMany(e => e.BuyOrderFills)
+            .HasForeignKey(e => e.IdBuyOrder)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder
+            .HasOne(e => e.SellOrder)
+            .WithMany(e => e.SellOrderFills)
+            .HasForeignKey(e => e.IdSellOrder)
+            .OnDelete(DeleteBehavior.Restrict);
+        
         builder
             .Property(x => x.Volume)
             .IsRequired();
@@ -30,16 +41,9 @@ public class OrderFillEntityConfiguration : IEntityTypeConfiguration<OrderFillEn
             .IsRequired();
 
         builder
-            .HasOne(e => e.BuyOrder)
-            .WithMany(e => e.BuyOrderFills)
-            .HasForeignKey(e => e.IdBuyOrder)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        builder
-            .HasOne(e => e.SellOrder)
-            .WithMany(e => e.SellOrderFills)
-            .HasForeignKey(e => e.IdSellOrder)
-            .OnDelete(DeleteBehavior.Restrict);
+            .Property(x => x.CreatedDate)
+            .ValueGeneratedOnAdd()
+            .HasDefaultValueSql("GETUTCDATE()");
     }
 }
 

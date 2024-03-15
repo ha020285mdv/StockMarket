@@ -18,14 +18,14 @@ public class OrderHistoryEntityConfiguration : IEntityTypeConfiguration<OrderHis
 
         builder
             .HasOne(e => e.Security)
-            .WithMany(e => e.OrderBooks)
+            .WithMany(e => e.OrderHistory)
             .HasForeignKey(e => e.Ticker)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder
             .HasOne(e => e.User)
             .WithMany(e => e.Orders)
-            .HasForeignKey(e => e.IdUser)
+            .HasForeignKey(e => e.UserId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder
@@ -36,12 +36,12 @@ public class OrderHistoryEntityConfiguration : IEntityTypeConfiguration<OrderHis
         builder
             .Property(x => x.CreatedDate)
             .ValueGeneratedOnAdd()
-            .HasDefaultValueSql("GETUTCDATE()");  // TODO: ask if it is ok?
+            .HasDefaultValueSql("GETUTCDATE()");  
 
         builder
             .Property(x => x.ModifiedDate)
             .ValueGeneratedOnUpdate()
-            .HasDefaultValueSql("GETUTCDATE()");  // TODO: ask if it is ok?
+            .HasDefaultValueSql("GETUTCDATE()"); 
 
         builder
             .Property(x => x.VolumeRequested)
@@ -61,12 +61,10 @@ public class OrderHistoryEntityConfiguration : IEntityTypeConfiguration<OrderHis
             .HasConversion<int>()
             .IsRequired();
 
-
-        //// make relation one-to-one to OrderHistory
-       // builder
-       //     .HasOne(e => e.ActiveOrder)
-       //     .WithOne(e => e.User)
-       //     .HasForeignKey<UserProfile>(up => up.UserProfileId);
+        builder
+            .HasOne(e => e.ActiveOrder)
+            .WithOne(e => e.OrderHistory)
+            .HasForeignKey<ActiveOrdersEntity>(e => e.Id);
 
     }
 }

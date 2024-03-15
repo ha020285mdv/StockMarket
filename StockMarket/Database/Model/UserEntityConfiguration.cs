@@ -22,6 +22,9 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
             .IsRequired()
             .HasMaxLength(50);
 
+        builder.HasIndex(x => x.XAPIKey)
+            .IsUnique();
+
         builder
             .Property(x => x.Name)
             .IsRequired()
@@ -41,12 +44,12 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
         builder
             .HasMany(r => r.Portfolio)
             .WithOne(f => f.User)
-            .HasForeignKey(f => f.IdUser);
+            .HasForeignKey(f => f.UserId);
 
         builder
             .HasMany<UserPortfolioEntity>(e => e.Portfolio)
             .WithOne(e => e.User)
-            .HasForeignKey(e => e.IdUser)
+            .HasForeignKey(e => e.UserId)
             .OnDelete(DeleteBehavior.Restrict)
             .IsRequired();
 
@@ -54,7 +57,7 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
         builder
             .HasMany<OrderHistoryEntity>(e => e.Orders)
             .WithOne(e => e.User)
-            .HasForeignKey(e => e.IdUser)
+            .HasForeignKey(e => e.UserId)
             .OnDelete(DeleteBehavior.Restrict)
             .IsRequired();
     }
