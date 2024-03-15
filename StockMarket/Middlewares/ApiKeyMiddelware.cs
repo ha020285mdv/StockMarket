@@ -1,7 +1,7 @@
-﻿using StockMarket.Constants;
+﻿using Microsoft.EntityFrameworkCore;
+using StockMarket.Constants;
 using StockMarket.Database;
 using StockMarket.Database.Model;
-using StockMarket.Services;
 using System.Net;
 using System.Security.Claims;
 
@@ -10,15 +10,16 @@ namespace StockMarket.Middlewares
     public class ApiKeyMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly IUserService _userService;
+        private readonly IServiceProvider _serviceProvider;
 
-        public ApiKeyMiddleware(
+        public ApiKeyMiddleware
+        (
             RequestDelegate next,
             IServiceProvider serviceProvider
         )
         {
             _next = next;
-            _userService = serviceProvider.GetRequiredService<IUserService>();
+            _serviceProvider = serviceProvider;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -38,8 +39,12 @@ namespace StockMarket.Middlewares
                 return;
             }
 
+            // get access to the database
+            using var scope = _serviceProvider.CreateScope();
+            DatabaseContext database = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+
             // get the user from the database
-            UserEntity? User = await _userService.GetUserAsync(userApiKey);
+            UserEntity? User = await database.Users.FirstOrDefaultAsync(u => u.XAPIKey == userApiKey);
 
             // check if user exists, if not - stop the request
             if (User == null)

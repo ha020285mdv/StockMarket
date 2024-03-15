@@ -1,26 +1,23 @@
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using StockMarket.Application.Exceptions;
-using StockMarket.Database;
 using StockMarket.Database.Model;
+using StockMarket.Services;
 
 namespace StockMarket.Application.Queries;
 
 public class UserQueryHandler: IRequestHandler<UserQuery, UserEntity>
 {
-    private readonly DatabaseContext _database;
+    private readonly IUserService _userService;
 
-    public UserQueryHandler(DatabaseContext database)
+    public UserQueryHandler(IUserService userService)
     {
-        _database = database;
+        _userService = userService;
     }
 
     public async Task<UserEntity> Handle(UserQuery request, CancellationToken cancellationToken)
     {
-
-        UserEntity? user = await _database.Users.FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken: cancellationToken);
-
-        return await _database.Users.FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken: cancellationToken)
-               ?? throw new UserNotFoundException(request.Email);
+        return 
+            await _userService.GetUserByEmailAsync(request.Email, cancellationToken) 
+            ?? throw new UserNotFoundException(request.Email);
     }
 }

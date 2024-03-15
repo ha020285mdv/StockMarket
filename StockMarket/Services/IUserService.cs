@@ -1,4 +1,6 @@
-﻿using StockMarket.Database.Model;
+﻿using Azure.Core;
+using StockMarket.Database.Model;
+using System;
 
 namespace StockMarket.Services;
 
@@ -6,7 +8,11 @@ public interface IUserService
 {
     public UserSession? GetUserSession();
 
-    Task<UserEntity?> GetUserAsync(string XAPIKey);
+    public Task<UserEntity?> GetUserByXAPIAsync(string XAPIKey, CancellationToken? cancellationToken);
+
+    public Task<UserEntity?> GetUserByEmailAsync(string XAPIKey, CancellationToken? cancellationToken);
+
+    public Task<UserEntity?> CreateUserAsync(string name, string email, string XAPIKey, decimal funds, CancellationToken? cancellationToken);
 }
 
 public class UserSession

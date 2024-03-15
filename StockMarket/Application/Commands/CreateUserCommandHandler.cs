@@ -1,39 +1,34 @@
 ﻿using MediatR;
 using StockMarket.Application.Exceptions;
-using StockMarket.Database;
 using StockMarket.Database.Model;
+using StockMarket.Services;
 
 namespace StockMarket.Application.Commands;
 
 public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, UserEntity>
 {
-    private readonly DatabaseContext _database;
+    private readonly IUserService _userService;
 
-    public CreateUserCommandHandler(DatabaseContext database)
-    {
-        _database = database;
-    }
+    public CreateUserCommandHandler(IUserService userService) { _userService = userService; }
 
-    public async Task<UserEntity> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    public async Task<UserEntity?> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        if (_database.Users.Any(p => p.Email == request.Email))
+        
+        if (await _userService.GetUserByEmailAsync(request.Email, null) == null)
+        { 
             throw new UserAlreadyExistsException(request.Email);
+        }
 
-        var entity = new UserEntity
-        {
-            XAPIKey = GenerateSafeRandomString(30),
-            Name = request.Name,
-            Email = request.Email.ToLower(),
-            Funds = request.Funds,
-        };
-
-        _database.Users.Add(entity);
-        await _database.SaveChangesAsync(cancellationToken);
-
-        return entity;
+        return await _userService.CreateUserAsync(
+            request.Name,
+            request.Email,
+            GenerateSafeRandomString(30),
+            request.Funds,
+            cancellationToken
+        );
     }
 
-    private static string GenerateSafeRandomString(int length)
+    public static string GenerateSafeRandomString(int length)
     {
         const string safeCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         Random random = new Random();

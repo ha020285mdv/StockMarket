@@ -8,7 +8,7 @@ namespace StockMarket;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -60,15 +60,8 @@ public class Program
 
         var app = builder.Build();
 
-        // Create and migrate database
-        using (var serviceScope = app.Services.CreateScope())
-        {
-            var context = serviceScope.ServiceProvider.GetRequiredService<DatabaseContext>();
-            context.Database.Migrate();
-        }
-
-        //////////// SEED + migrate ////////////
-
+        // Migrate and seed database
+        await DatabaseContextSeed.SeedAsync(app.Services);
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
