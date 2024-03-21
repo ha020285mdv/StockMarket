@@ -3,7 +3,7 @@ namespace StockMarket.Application.Exceptions;
 public class SecurityAlreadyExistsException : Exception
 {
     public SecurityAlreadyExistsException(string ticker)
-        : base($"Person with personal identifier {ticker} already exists.")
+        : base($"Security with tiker '{ticker}' already exists.")
     {
     }
 }
