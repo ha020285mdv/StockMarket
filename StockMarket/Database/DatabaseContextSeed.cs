@@ -97,15 +97,16 @@ public class DatabaseContextSeed
             return;
 
         //var user1 = users.Find(u => u.Name == "John Doe");
-        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[GetRandomInt(0, users.Count-1)].Id, Ticker = "GOOGL" });
-        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[GetRandomInt(0, users.Count - 1)].Id, Ticker = "GOOGL" });
-        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[GetRandomInt(0, users.Count - 1)].Id, Ticker = "GOOGL" });
-        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[GetRandomInt(0, users.Count - 1)].Id, Ticker = "AAPL" });
-        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[GetRandomInt(0, users.Count - 1)].Id, Ticker = "AAPL" });
-        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[GetRandomInt(0, users.Count - 1)].Id, Ticker = "AAPL" });
-        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[GetRandomInt(0, users.Count - 1)].Id, Ticker = "META" });
-        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[GetRandomInt(0, users.Count - 1)].Id, Ticker = "META" });
-        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[GetRandomInt(0, users.Count - 1)].Id, Ticker = "META" });
+        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[0].Id, Ticker = "GOOGL" });
+        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[1].Id, Ticker = "GOOGL" });
+        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[2].Id, Ticker = "GOOGL" });
+        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[3].Id, Ticker = "AAPL" });
+        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[4].Id, Ticker = "AAPL" });
+        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[5].Id, Ticker = "AAPL" });
+        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[6].Id, Ticker = "META" });
+        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[7].Id, Ticker = "META" });
+        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[8].Id, Ticker = "META" });
+        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[9].Id, Ticker = "AMZN" });
         await _context.SaveChangesAsync();
     }
 
