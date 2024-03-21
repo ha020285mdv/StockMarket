@@ -34,9 +34,11 @@ public class DatabaseContextSeed
     {
         _logger.LogInformation("Migrating database");
         await _context.Database.MigrateAsync();
+
         _logger.LogInformation("Seeding database");
         await SeedSecurities();
-        await SeedUsers();
+        var users = await SeedUsers();
+        await SeedPortfolios(users);
      }
 
     private async Task SeedSecurities()
@@ -63,21 +65,47 @@ public class DatabaseContextSeed
         await _context.SaveChangesAsync();
     }
 
-    private async Task SeedUsers()
+    private async Task<List<UserEntity>> SeedUsers()
     {
-        if (_context.Users.Any())
+        List<UserEntity> users = await _context.Users.ToListAsync();
+
+        if (users.Any())
+            return users;
+
+        users = new List<UserEntity>() {
+            new UserEntity() { Name = "John Doe", Email = "john.doe@example.com", XAPIKey = CreateUserCommandHandler.GenerateSafeRandomString(30), Funds = GetRandomDecimal() },
+            new UserEntity() { Name = "Jane Smith", Email = "jane.smith@example.com", XAPIKey = CreateUserCommandHandler.GenerateSafeRandomString(30), Funds = GetRandomDecimal() },
+            new UserEntity() { Name = "Michael Johnson", Email = "michael.johnson@example.com", XAPIKey = CreateUserCommandHandler.GenerateSafeRandomString(30), Funds = GetRandomDecimal() },
+            new UserEntity() { Name = "Emily Brown", Email = "emily.brown@example.com", XAPIKey = CreateUserCommandHandler.GenerateSafeRandomString(30), Funds = GetRandomDecimal() },
+            new UserEntity() { Name = "William Taylor", Email = "william.taylor@example.com", XAPIKey = CreateUserCommandHandler.GenerateSafeRandomString(30), Funds = GetRandomDecimal() },
+            new UserEntity() { Name = "Sophia Martinez", Email = "sophia.martinez@example.com", XAPIKey = CreateUserCommandHandler.GenerateSafeRandomString(30), Funds = GetRandomDecimal() },
+            new UserEntity() { Name = "James Anderson", Email = "james.anderson@example.com", XAPIKey = CreateUserCommandHandler.GenerateSafeRandomString(30), Funds = GetRandomDecimal() },
+            new UserEntity() { Name = "Olivia Garcia", Email = "olivia.garcia@example.com", XAPIKey = CreateUserCommandHandler.GenerateSafeRandomString(30), Funds = GetRandomDecimal() },
+            new UserEntity() { Name = "Benjamin Hernandez", Email = "benjamin.hernandez@example.com", XAPIKey = CreateUserCommandHandler.GenerateSafeRandomString(30), Funds = GetRandomDecimal() },
+            new UserEntity() { Name = "Emma Smith", Email = "emma.smith@example.com", XAPIKey = CreateUserCommandHandler.GenerateSafeRandomString(30), Funds = GetRandomDecimal() },
+        };
+
+        await _context.Users.AddRangeAsync(users);
+        await _context.SaveChangesAsync();
+
+        return users;
+    }
+
+    private async Task SeedPortfolios(List<UserEntity> users)
+    {
+        if (_context.UsersPortfolios.Any())
             return;
 
-        _context.Users.Add(new UserEntity() { Name = "John Doe", Email = "john.doe@example.com", XAPIKey = CreateUserCommandHandler.GenerateSafeRandomString(30), Funds = 5000.50m });
-        _context.Users.Add(new UserEntity() { Name = "Jane Smith", Email = "jane.smith@example.com", XAPIKey = CreateUserCommandHandler.GenerateSafeRandomString(30), Funds = 10000.75m });
-        _context.Users.Add(new UserEntity() { Name = "Michael Johnson", Email = "michael.johnson@example.com", XAPIKey = CreateUserCommandHandler.GenerateSafeRandomString(30), Funds = 7500.25m });
-        _context.Users.Add(new UserEntity() { Name = "Emily Brown", Email = "emily.brown@example.com", XAPIKey = CreateUserCommandHandler.GenerateSafeRandomString(30), Funds = 8200.80m });
-        _context.Users.Add(new UserEntity() { Name = "William Taylor", Email = "william.taylor@example.com", XAPIKey = CreateUserCommandHandler.GenerateSafeRandomString(30), Funds = 6000.60m });
-        _context.Users.Add(new UserEntity() { Name = "Sophia Martinez", Email = "sophia.martinez@example.com", XAPIKey = CreateUserCommandHandler.GenerateSafeRandomString(30), Funds = 9500.90m });
-        _context.Users.Add(new UserEntity() { Name = "James Anderson", Email = "james.anderson@example.com", XAPIKey = CreateUserCommandHandler.GenerateSafeRandomString(30), Funds = 7000.70m });
-        _context.Users.Add(new UserEntity() { Name = "Olivia Garcia", Email = "olivia.garcia@example.com", XAPIKey = CreateUserCommandHandler.GenerateSafeRandomString(30), Funds = 5500.55m });
-        _context.Users.Add(new UserEntity() { Name = "Benjamin Hernandez", Email = "benjamin.hernandez@example.com", XAPIKey = CreateUserCommandHandler.GenerateSafeRandomString(30), Funds = 8900.85m });
-        _context.Users.Add(new UserEntity() { Name = "Emma Smith", Email = "emma.smith@example.com", XAPIKey = CreateUserCommandHandler.GenerateSafeRandomString(30), Funds = 7200.70m });
+        //var user1 = users.Find(u => u.Name == "John Doe");
+        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[GetRandomInt(0, users.Count-1)].Id, Ticker = "GOOGL" });
+        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[GetRandomInt(0, users.Count - 1)].Id, Ticker = "GOOGL" });
+        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[GetRandomInt(0, users.Count - 1)].Id, Ticker = "GOOGL" });
+        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[GetRandomInt(0, users.Count - 1)].Id, Ticker = "AAPL" });
+        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[GetRandomInt(0, users.Count - 1)].Id, Ticker = "AAPL" });
+        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[GetRandomInt(0, users.Count - 1)].Id, Ticker = "AAPL" });
+        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[GetRandomInt(0, users.Count - 1)].Id, Ticker = "META" });
+        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[GetRandomInt(0, users.Count - 1)].Id, Ticker = "META" });
+        _context.UsersPortfolios.Add(new UserPortfolioEntity() { Number = GetRandomInt(), UserId = users[GetRandomInt(0, users.Count - 1)].Id, Ticker = "META" });
         await _context.SaveChangesAsync();
     }
 
@@ -99,5 +127,18 @@ public class DatabaseContextSeed
             3,
             timeSpan
         );
+    }
+
+    private static int GetRandomInt(int min=1, int max=1000)
+    {
+        Random random = new Random();
+        return random.Next(min, max + 1);
+    }
+
+    private static decimal GetRandomDecimal(decimal min=1000, decimal max=100000)
+    {
+        Random random = new Random();
+        double nextDouble = random.NextDouble() * (double)(max - min) + (double)min;
+        return (decimal)nextDouble;
     }
 }
